@@ -10,7 +10,7 @@ A full-stack, enterprise-level web application designed to digitize the entire l
 
 ###  1. E-Commerce Store (B2C)
 * **Dynamic Pricing Engine:** Calculates livestock prices based on live weight, selected customizations (slaughtering, cutting, packaging), and location-based delivery fees.
-* **Shared Purchases (نظام الأسهم):** Allows customers to buy "shares" in large animals (e.g., Cows, Camels) with an automatic fulfillment algorithm triggered once the animal is fully funded.
+* **Shared Purchases :** Allows customers to buy "shares" in large animals (e.g., Cows, Camels) with an automatic fulfillment algorithm triggered once the animal is fully funded.
 * **Smart Cart & Checkout:** Real-time deposit calculation based on cart items, fully integrated with **Paymob** (Visa/Wallets) for secure transactions.
 
 ###  2. Corporate Portal (B2B)
