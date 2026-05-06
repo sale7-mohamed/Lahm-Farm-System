@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+    <script>
+        window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('Failed to fetch dynamically imported module')) {
+                window.location.reload(true);
+            }
+        });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="theme-color" content="#198754" />
+
+    <!-- PWA Meta -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="متجر لَحِم الإلكتروني - أجود أنواع اللحوم والمواشي الطازجة. ذبح حلال، توصيل سريع، جودة مضمونة. تسوق الآن من أكبر متجر لبيع المواشي أونلاين." />
+    <meta name="keywords" content="لحوم, مواشي, أضاحي, ذبح حلال, لحوم طازجة, توصيل لحوم, شراء مواشي أونلاين, لحوم مصر, لَحِم" />
+    <meta name="author" content="متجر لَحِم" />
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="متجر لَحِم - بيع المواشي واللحوم الطازجة أونلاين" />
+    <meta property="og:description" content="أجود أنواع اللحوم والمواشي الطازجة. ذبح حلال، توصيل سريع، جودة مضمونة." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lahmfarm.com" />
+    <meta property="og:image" content="https://lahmfarm.com/logo.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="متجر لَحِم - بيع المواشي واللحوم الطازجة أونلاين" />
+    <meta name="twitter:description" content="أجود أنواع اللحوم والمواشي الطازجة. ذبح حلال، توصيل سريع، جودة مضمونة." />
+    <meta name="twitter:image" content="https://lahmfarm.com/logo.png" />
+
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <!-- Manifest for Vite PWA -->
+    <link rel="manifest" href="/manifest.webmanifest">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "متجر لَحِم",
+        "description": "متجر إلكتروني لبيع اللحوم والمواشي الطازجة",
+        "url": "https://lahmfarm.com",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://lahmfarm.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <title>متجر لَحِم - بيع المواشي واللحوم الطازجة أونلاين</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

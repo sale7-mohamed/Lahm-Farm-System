@@ -1,0 +1,35 @@
+<!-- orders/templates/orders/bulk_print.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>طباعة أوراق الرحلة</title>
+    <style>
+        body { background: #eee; margin: 0; padding: 20px; }
+        .print-btn { position: fixed; top: 20px; left: 20px; background: #0d6efd; color: white; padding: 15px 30px; font-size: 18px; border: none; cursor: pointer; border-radius: 5px; z-index: 9999; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .page { background: white; margin: 0 auto 20px auto; padding: 40px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 800px; min-height: 1050px; position: relative; }
+        @media print {
+            body { background: white; padding: 0; }
+            .print-btn { display: none; }
+            .page { margin: 0; padding: 20px; box-shadow: none; border: none; page-break-after: always; min-height: auto; }
+            .page:last-child { page-break-after: auto; }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">طباعة كل الأوراق 🖨️</button>
+
+    {% for job in print_jobs %}
+        <div class="page">
+            {% if job.type == 'invoice' %}
+                {% include 'orders/invoice.html' with order=job.order completed_payments=job.payments %}
+            {% elif job.type == 'receipt' %}
+                {% include 'orders/receipt.html' with order=job.order %}
+            {% elif job.type == 'delivery_note' %}
+                {% include 'orders/delivery_note.html' with order=job.order %}
+            {% endif %}
+        </div>
+    {% endfor %}
+</body>
+</html>
+

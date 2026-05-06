@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إيصال استلام نقدية</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.8;
+            padding: 40px;
+            color: #111;
+        }
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #0d6efd;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            z-index: 999;
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+                margin: 1cm;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            .clause, .signatures, table, .info-section {
+                page-break-inside: avoid;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            height: 80px;
+            filter: grayscale(100%);
+        }
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .content-box {
+            border: 2px solid #000;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        .row {
+            display: flex;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .label {
+            width: 150px;
+            font-weight: bold;
+        }
+        .value {
+            flex-grow: 1;
+            border-bottom: 1px dotted #000;
+            padding-bottom: 5px;
+            min-height: 25px;
+        }
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            padding: 0 40px;
+        }
+        .sign-box {
+            text-align: center;
+            width: 250px;
+        }
+        .sign-line {
+            border-bottom: 1px solid #000;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">طباعة الإيصال 🖨️</button>
+
+    <div class="header">
+        <div>
+            <h2 style="margin: 0;">شركة لَحِم لإدارة المزارع واللحوم</h2>
+        </div>
+        <img src="https://lahmfarm.com/logo.png" alt="Lahm Logo" class="logo-img" style="max-height: 80px; object-fit: contain;">
+    </div>
+
+    <h1>إيصال استلام نقدية (سند صرف)</h1>
+
+    <div class="content-box">
+        <div class="row">
+            <div class="label">تاريخ الإصدار:</div>
+            <div class="value">{{ date|default:"....../....../.........." }}</div>
+        </div>
+        <div class="row">
+            <div class="label">استلمت أنا السيد/ة:</div>
+            <div class="value">{{ name|default:"...................................................................................." }}</div>
+        </div>
+        <div class="row">
+            <div class="label">رقم قومي:</div>
+            <div class="value" dir="ltr" style="text-align: right;">{{ national_id|default:"...................................." }}</div>
+        </div>
+        <div class="row">
+            <div class="label">مبلغاً وقدره:</div>
+            <div class="value font-weight-bold">
+                {% if amount %}{{ amount }} جنيهاً مصرياً فقط لا غير.{% else %}........................................................ جنيهاً مصرياً فقط لا غير.{% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">وذلك قيمة:</div>
+            <div class="value">{{ notes|default:"مستحقات توريد مزارع ومواشي / دفعة تحت الحساب." }}</div>
+        </div>
+
+        <p style="margin-top: 30px; font-weight: bold;">
+            وهذا إقرار مني باستلام المبلغ المذكور أعلاه نقداً وعدال، وتبرأ ذمة الشركة من هذا المبلغ بمجرد التوقيع.
+        </p>
+
+        <div class="signatures">
+            <div class="sign-box">
+                <p><strong>المقـــر بما فيـــه (المستلم)</strong></p>
+                <div class="sign-line"></div>
+                <p style="font-size: 12px; margin-top: 5px;">الاسم / التوقيع / البصمة</p>
+            </div>
+            <div class="sign-box">
+                <p><strong>اعتماد إدارة الشـركــة</strong></p>
+                <div class="sign-line"></div>
+                <p style="font-size: 12px; margin-top: 5px;">الختم / التوقيع</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

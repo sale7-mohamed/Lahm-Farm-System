@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>عقد توريد أعمال B2B</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.8;
+            padding: 40px;
+            color: #111;
+            background: #fff;
+        }
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #0d6efd;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+                margin: 1cm;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            .clause, .signatures, table, .info-section {
+                page-break-inside: avoid;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            height: 80px;
+            filter: grayscale(100%);
+        }
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: #000;
+        }
+        .clause {
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+        .clause-title {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-left: 5px;
+        }
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            page-break-inside: avoid;
+        }
+        .sign-box {
+            text-align: center;
+            width: 45%;
+        }
+        .sign-line {
+            border-bottom: 1px solid #000;
+            margin-top: 40px;
+            width: 100%;
+        }
+        .contract-meta {
+            margin: 20px 0;
+        }
+        strong {
+            color: #1a1e24;
+        }
+        p {
+            margin: 12px 0;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">طباعة العقد 🖨️</button>
+
+    <div class="header">
+        <div>
+            <h2 style="margin: 0;">شركة لَحِم لإدارة المزارع واللحوم</h2>
+        </div>
+        <img src="https://lahmfarm.com/logo.png" alt="Lahm Logo" class="logo-img" style="max-height: 80px; object-fit: contain;">
+    </div>
+
+    <h1>عقد توريد تجاري (B2B)</h1>
+
+    <p>إنه في يوم: <strong>{{ date|date:"Y-m-d" }}</strong>، تم الاتفاق بين كل من:</p>
+
+    <p><strong>الطرف الأول (المورد):</strong> شركة لَحِم لإدارة المزارع واللحوم.</p>
+    <p><strong>الطرف الثاني (العميل التجاري):</strong> السادة / <strong>{{ b2b.business_name|default:"................................................" }}</strong>،
+    ويمثلها السيد: <strong>{{ b2b.full_name|default:"...................................." }}</strong>، هاتف: <strong dir="ltr">{{ b2b.phone|default:"........................" }}</strong>.</p>
+
+    <div class="clause"><span class="clause-title">البند الأول (نطاق العقد):</span> يوافق الطرف الأول على تلبية الطلبيات التجارية وتقديم خدمات توريد اللحوم والمواشي الحية أو المذبوحة للطرف الثاني، وفقاً لأوامر التوريد الصادرة عبر النظام والمسعرة مسبقاً.</div>
+
+    <div class="clause"><span class="clause-title">البند الثاني (الحد الأدنى للطلبيات):</span> يقر الطرف الثاني بعلمه والتزامه بالحد الأدنى للكميات المحددة لقطاع الأعمال للحصول على الأسعار التجارية المخفضة. ولا يحق للطرف الثاني طلب تجزئة الكميات المعتمدة بأوامر الشراء.</div>
+
+    <div class="clause"><span class="clause-title">البند الثالث (شروط الدفع والتأخير):</span> يلتزم الطرف الثاني بدفع عربون التوريد المُتفق عليه، وسداد كامل المستحقات المتبقية فور تسلم البضاعة واستلام الفاتورة النهائية. وفي حالة تأخر الطرف الثاني عن السداد، يحق للطرف الأول إيقاف التوريد فوراً وفسخ العقد والمطالبة القانونية بالمبالغ المستحقة للشركة.</div>
+
+    <div class="clause"><span class="clause-title">البند الرابع (الاستلام والمطابقة):</span> يتم فرز واستلام البضاعة (أوزان ومواصفات) في مقر الطرف الثاني من قبل من يمثله. توقيع ممثل الطرف الثاني على إذن الاستلام يُعد إقراراً نهائياً لا رجعة فيه بقبول البضاعة ومطابقتها للمواصفات، ولا تقبل أي شكوى أو طلب استرجاع بعد ذلك إلا في حالة ثبوت عيب صحي غير ظاهر يثبته تقرير حكومي معتمد.</div>
+
+    <div class="clause"><span class="clause-title">البند الخامس (القوة القاهرة والتعديلات):</span> يحتفظ الطرف الأول بالحق في تعديل الأسعار بناءً على تقلبات السوق، على أن تسري الأسعار الجديدة على الطلبيات المستقبلية. وفي حالات القوة القاهرة المانعة للتوريد، يسقط الالتزام المتبادل عن الطرفين دون تعويضات.</div>
+
+    <p style="margin-top: 30px;">تحرر هذا العقد من نسختين، بيد كل طرف نسخة للعمل بموجبها.</p>
+
+    <div class="signatures">
+        <div class="sign-box">
+            <p><strong>الطرف الأول (شركة لَحِم)</strong></p>
+            <div class="sign-line"></div>
+            <p style="font-size: 12px; margin-top: 5px;">توقيع الإدارة / الختم</p>
+        </div>
+        <div class="sign-box">
+            <p><strong>الطرف الثاني (العميل التجاري)</strong></p>
+            <div class="sign-line"></div>
+            <p style="font-size: 12px; margin-top: 5px;">الاسم / التوقيع / الختم</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+
+.dir-ltr {
+    direction: ltr !important;
+    display: inline-block;
+    unicode-bidi: isolate;
+}
+
+input[type="number"],
+input[type="tel"] {
+    direction: ltr !important;
+    text-align: right;
+    font-family: 'Inter', 'Arial', sans-serif !important;
+}
+
+:root {
+    --sidebar-width: 260px;
+    --header-height: 60px;
+    --primary-color: #0d6efd;
+    --transition-speed: 0.3s;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #f4f6f9;
+}
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    direction: rtl;
+}
+
+.sidebar-wrapper {
+    width: var(--sidebar-width);
+    background-color: #212529;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1040;
+    transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    overflow-x: hidden !important;
+    touch-action: pan-y !important;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.main-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-right var(--transition-speed) ease;
+    width: 100%;
+    margin-right: var(--sidebar-width);
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1030;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-speed) ease;
+    backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+@media (max-width: 991.98px) {
+    .sidebar-wrapper {
+        transform: translateX(100%);
+    }
+
+    .sidebar-wrapper.open {
+        transform: translateX(0);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-wrapper {
+        margin-right: 0;
+    }
+}
+
+.sidebar-wrapper .nav-link {
+    border-radius: 8px;
+    margin-bottom: 4px;
+    padding: 10px 15px;
+    white-space: nowrap;
+    color: #a2a3b7 !important;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.sidebar-wrapper .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+    transform: translateX(-3px);
+}
+
+.sidebar-wrapper .nav-link.active {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+}
+
+.sidebar-wrapper::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar-wrapper::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 3px;
+}
+
+.text-truncate-safe {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Fix Toastify Swipe on Mobile */
+.Toastify__toast {
+    touch-action: pan-x !important;
+}
+.Toastify__toast-container {
+    touch-action: pan-y !important;
+}
+

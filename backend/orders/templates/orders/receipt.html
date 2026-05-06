@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إيصال استلام عربون #{{ order.id }}</title>
+    <style>
+        body {
+            font-family: 'Cairo', 'Arial', sans-serif;
+            direction: rtl;
+            padding: 0;
+            background: #eef2f3;
+            margin: 0;
+            color: #333;
+        }
+        .receipt-box {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #0dcaf0;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .print-btn:hover {
+            background: #0bb5d9;
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+                margin: 1cm;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            .clause, .signatures, table, .info-section {
+                page-break-inside: avoid;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #0dcaf0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo-img {
+            height: 70px;
+            object-fit: contain;
+        }
+        .header-details {
+            text-align: left;
+        }
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: right;
+        }
+        th {
+            background-color: #0dcaf0;
+            color: white;
+            font-weight: bold;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .details {
+            background: #fef9e6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: center;
+            font-size: 1.2em;
+            line-height: 2;
+        }
+        .details strong {
+            color: #0dcaf0;
+        }
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">طباعة الإيصال 🖨️</button>
+    <div class="receipt-box">
+        <div class="header">
+            <div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <img src="https://lahmfarm.com/logo.png" alt="Lahm Logo" class="logo-img" style="max-height: 80px; object-fit: contain;">
+                    <div>
+                        <h1 style="color: #0dcaf0; margin: 0;">لَحِم (Lahm)</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="header-details">
+                <h2 style="margin:0; color:#333;">إيصال استلام نقدية (عربون)</h2>
+                <p>تاريخ: {% now "Y-m-d H:i" %}</p>
+                <p>رقم الطلب: #{{ order.id }}</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div>
+                <strong>العميل:</strong><br>
+                {{ order.user.full_name|default:order.user.username }}
+            </div>
+            <div>
+                <strong>الهاتف:</strong><br>
+                <span dir="ltr">{{ order.user.phone|default:"—" }}</span>
+            </div>
+        </div>
+
+        {% if order.items.all %}
+        <h3>الأصناف المشتراة</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>الصنف</th>
+                    <th>الخدمات الإضافية</th>
+                    <th>الإجمالي</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                    <td>
+                        {{ item.animal.category.name_ar }} (كود: {{ item.animal.code }})
+                        {% if item.share_quantity > 1 %} - {{ item.share_quantity }} أسهم {% endif %}
+                        {% if item.actual_weight %}
+                            <br><small style="color: blue; font-weight: bold;">الوزن الفعلي المسلم: {{ item.actual_weight }} كجم</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.selected_services.slaughter %}ذبح، {% endif %}
+                        {% if item.selected_services.cutting %}تقطيع، {% endif %}
+                        {% if item.selected_services.packaging %}تغليف{% endif %}
+                        {% if item.selected_services.butcher_notes %}
+                            <br><small>تعليمات: {{ item.selected_services.butcher_notes }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.original_price and item.original_price != item.price_per_item %}
+                            <span style="text-decoration: line-through; color: #999; font-size: 12px;">{{ item.original_price }}</span><br>
+                        {% endif %}
+                        {{ item.price_per_item|add:item.service_cost }} ج.م
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <div class="details">
+            <p>استلمنا من السيد/ة: <strong>{{ order.user.full_name|default:order.user.username }}</strong></p>
+            <p>مبلغ وقدره: <strong style="color: green; font-size: 1.3em;">{{ order.deposit_total }} ج.م</strong></p>
+            <p>وذلك كعربون لطلب رقم: <strong>#{{ order.id }}</strong></p>
+        </div>
+
+        <div class="footer-note">
+            <p>* هذا الإيصال إثبات لعملية الدفع المبدئي. المبلغ المتبقي للطلب ({{ order.remaining_amount }} ج.م) يُسدد عند الاستلام.</p>
+            <p>شكراً لتسوقكم مع لحم – نحرص على تقديم أفضل خدمة</p>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,37 @@
+{% extends 'emails/base_email.html' %}
+{% block content %}
+    <h3 style="margin-top: 0;">مرحباً {{ name }}،</h3>
+    <p>{{ intro_text }}</p>
+
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #eee; margin: 20px 0;">
+        {% if order.source == 'b2b' and order.business_source %}
+            <h4 style="margin-top: 0; color: #198754; border-bottom: 2px solid #198754; padding-bottom: 10px;">تفاصيل طلب توريد الشركات #{{ order.business_source.id }}</h4>
+        {% else %}
+            <h4 style="margin-top: 0; color: #198754; border-bottom: 2px solid #198754; padding-bottom: 10px;">تفاصيل الطلب #{{ order.id }}</h4>
+        {% endif %}
+
+        <table style="width: 100%; text-align: right; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">الإجمالي:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold;">{{ order.total_price }} ج.م</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">المبلغ المدفوع:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; color: #198754; font-weight: bold;">{{ order.deposit_total }} ج.م</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;">المبلغ المتبقي:</td>
+                <td style="padding: 8px 0; color: #dc3545; font-weight: bold;">{{ order.remaining_amount }} ج.م</td>
+            </tr>
+        </table>
+    </div>
+
+    <p style="text-align: center;">
+        {% if order.source == 'b2b' and order.business_source %}
+            <a href="{{ site_url }}/business" class="btn">عرض التفاصيل في بوابة الأعمال</a>
+        {% else %}
+            <a href="{{ site_url }}/my-orders" class="btn">عرض التفاصيل في حسابك</a>
+        {% endif %}
+    </p>
+{% endblock %}
+

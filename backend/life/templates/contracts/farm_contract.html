@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>عقد توريد مواشي | شركة لَحِم</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.9;
+            padding: 40px;
+            color: #111;
+            background: #fff;
+        }
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #0d6efd;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+                margin: 1cm;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            .clause, .signatures, table, .info-section {
+                page-break-inside: avoid;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .logo {
+            height: 80px;
+            filter: grayscale(100%);
+        }
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+            margin-bottom: 35px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .clause {
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+        .clause-title {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-left: 5px;
+        }
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+        }
+        .sign-box {
+            text-align: center;
+            width: 45%;
+        }
+        .sign-line {
+            border-bottom: 1px solid #000;
+            margin-top: 40px;
+        }
+        strong {
+            color: #000;
+        }
+        .legal-notice {
+            font-size: 0.9em;
+            color: #333;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ طباعة العقد</button>
+
+    <div class="header">
+        <div>
+            <h2 style="margin:0; font-size: 24px;">شركة لَحِم لإدارة المزارع واللحوم</h2>
+        </div>
+        <img src="https://lahmfarm.com/logo.png" alt="Lahm Logo" class="logo-img" style="max-height: 80px; object-fit: contain;">
+    </div>
+
+    <h1>عقد اتفاق وتوريد مواشي حية</h1>
+
+    <p>إنه في يوم: <strong>{{ date|date:"Y-m-d" }}</strong>، تم الاتفاق والتراضي التام النافي للجهالة شرعاً وقانوناً بين كل من:</p>
+
+    <p><strong>الطرف الأول (المشتري):</strong> شركة لَحِم لإدارة المزارع واللحوم، ومقرها الرئيسي القاهرة.</p>
+    <p><strong>الطرف الثاني (المورد):</strong> السادة / المزرعة: <strong>{{ farm.name|default:"................................................" }}</strong>،
+    ويمثلها السيد: <strong>{{ farm.contact_persons|default:"...................................." }}</strong>،
+    هاتف: <strong dir="ltr">{{ farm.phone|default:"........................" }}</strong>.</p>
+
+    <p><strong>التمهيد:</strong> حيث أن الطرف الأول يعمل في مجال تجارة وتوزيع اللحوم والمواشي، وحيث أن الطرف الثاني أبدى رغبته وقدرته على توريد مواشي حية مطابقة للشروط الشرعية والصحية، فقد اتفق الطرفان على ما يلي:</p>
+
+    <div class="clause"><span class="clause-title">البند الأول (الالتزامات الأساسية):</span> يلتزم الطرف الثاني بتوريد المواشي وفقاً للكميات والأوزان والمواصفات التي يطلبها الطرف الأول من خلال أوامر الشراء الرسمية. ويعتبر هذا التمهيد جزءاً لا يتجزأ من العقد.</div>
+
+    <div class="clause"><span class="clause-title">البند الثاني (الفحص والجودة):</span> تخضع جميع المواشي الموردة للفحص الطبي البيطري من قبل لجنة الطرف الأول قبل الاستلام. يحق للطرف الأول رفض أي رأس ماشية يشتبه في مرضها، هزالها، أو وجود عيب شرعي بها يمنعها من كونها أضحية، دون أن يحق للطرف الثاني المطالبة بأي تعويضات أو مصاريف نقل.</div>
+
+    <div class="clause"><span class="clause-title">البند الثالث (التلاعب والأوزان):</span> يتم اعتماد الأوزان بناءً على ميزان الطرف الأول حصراً وقت التسليم. يُقر الطرف الثاني بالالتزام بالأمانة التجارية؛ وفي حال ثبوت قيامه بتجويع أو تغذية الماشية بشكل مفرط (بالماء والملح) لزيادة الوزن الوهمي (مما يؤثر على نسبة التصافي)، يحق للطرف الأول خصم نسبة لا تقل عن 5% من إجمالي الوزن القائم، أو رفض الشحنة بالكامل وتغريم المورد.</div>
+
+    <div class="clause"><span class="clause-title">البند الرابع (الشروط المالية والمقاصة):</span> تتم التسويات المالية بناءً على كشف حساب المورد في النظام الإلكتروني للطرف الأول. يوافق الطرف الثاني صراحة على إعطاء الطرف الأول الحق الكامل في إجراء "مقاصة" لخصم أي مبالغ أو مديونيات أو تعويضات ناتجة عن نفوق أو إرجاع مواشي غير مطابقة للمواصفات من مستحقاته القائمة.</div>
+
+    <div class="clause"><span class="clause-title">البند الخامس (البيع خارج المنصة - التلاعب):</span> يلتزم الطرف الثاني التزاماً تاماً بعدم التصرف أو بيع أي ماشية تم حجزها أو تخصيصها لعملاء الطرف الأول. وفي حال ثبوت بيع المورد لحيوان محجوز لأطراف خارجية، يلتزم المورد برد قيمة الحيوان مضاعفة كشرط جزائي لتعويض الضرر الأدبي والمادي الذي يلحق بالطرف الأول تجاه عملائه.</div>
+
+    <div class="clause"><span class="clause-title">البند السادس (القوة القاهرة والفسخ):</span> للطرف الأول الحق في فسخ هذا العقد فوراً وبدون الحاجة لإنذار أو استصدار حكم قضائي في حال إخلال الطرف الثاني بأي من التزاماته. لا يتحمل الطرف الأول أي تعويضات في حالات القوة القاهرة التي تمنع الاستلام.</div>
+
+    <p style="margin-top: 40px;">تحرر هذا العقد من نسختين، بيد كل طرف نسخة للعمل بموجبها عند اللزوم.</p>
+
+    <div class="signatures">
+        <div class="sign-box">
+            <p><strong>الطرف الأول (إدارة المشتريات - لَحِم)</strong></p>
+            <div class="sign-line"></div>
+            <p style="font-size: 13px; margin-top: 8px;">الختم / التوقيع الاعتمادي</p>
+        </div>
+        <div class="sign-box">
+            <p><strong>الطرف الثاني (المورد)</strong></p>
+            <div class="sign-line"></div>
+            <p style="font-size: 13px; margin-top: 8px;">توقيع الممثل القانوني / بصمة</p>
+        </div>
+    </div>
+
+    <div class="legal-notice">
+        <small>تم إعداد هذا العقد إلكترونياً وفقاً لأحكام نظام التعاملات الإلكترونية، ويعتبر النسخة المطبوعة منه ملزمة للطرفين.</small>
+    </div>
+</body>
+</html>

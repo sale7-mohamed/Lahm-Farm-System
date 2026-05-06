@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>فاتورة نهائية #{{ order.id }}</title>
+    <style>
+        body {
+            font-family: 'Cairo', 'Arial', sans-serif;
+            direction: rtl;
+            padding: 0;
+            background: #eef2f3;
+            margin: 0;
+            color: #333;
+        }
+        .invoice-box {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #198754;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .print-btn:hover {
+            background: #157347;
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+                margin: 1cm;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            .clause, .signatures, table, .info-section {
+                page-break-inside: avoid;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #198754;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo-img {
+            height: 70px;
+            object-fit: contain;
+        }
+        .header-details {
+            text-align: left;
+        }
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: right;
+        }
+        th {
+            background-color: #198754;
+            color: white;
+            font-weight: bold;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .totals-box {
+            width: 350px;
+            float: left;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fff;
+            margin-bottom: 20px;
+        }
+        .totals-box table {
+            margin: 0;
+        }
+        .totals-box tr td {
+            border: none;
+            padding: 8px;
+        }
+        .totals-box tr.final-due td {
+            border-top: 2px solid #198754;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .footer-note {
+            clear: both;
+            margin-top: 50px;
+            text-align: center;
+            color: #777;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">طباعة الفاتورة 🖨️</button>
+    <div class="invoice-box">
+        <div class="header">
+            <div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <img src="https://lahmfarm.com/logo.png" alt="Lahm Logo" class="logo-img" style="max-height: 80px; object-fit: contain;">
+                    <div>
+                        <h1 style="color: #198754; margin: 0;">لَحِم (Lahm)</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="header-details">
+                <h2 style="margin:0; color:#333;">فاتورة ضريبية {% if order.source == 'b2b' %}لشركات (B2B){% endif %}</h2>
+                <p>تاريخ: {{ order.created_at|date:"Y-m-d" }}</p>
+                {% if order.source == 'b2b' and order.business_source %}
+                    <p>رقم طلب الشركات: <strong>#{{ order.business_source.id }}</strong></p>
+                    <p style="color:#777; font-size:12px;">(مرجع مالي: #{{ order.id }})</p>
+                {% else %}
+                    <p>رقم الطلب: #{{ order.id }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div>
+                <strong>بيانات العميل:</strong><br>
+                {{ order.user.full_name|default:order.user.username }}<br>
+                هاتف: <span dir="ltr">{{ order.user.phone|default:"—" }}</span>
+            </div>
+            <div>
+                <strong>موظف المبيعات:</strong><br>
+                {{ order.created_by_employee.full_name|default:"المتجر الإلكتروني" }}
+            </div>
+        </div>
+
+        <h3>الأصناف والخدمات</h3>
+        {% if order.source == 'b2b' and order.business_source %}
+            <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #198754;">
+                <h4 style="margin: 0 0 10px 0; color: #198754;">طلب توريد أعمال (B2B) رقم: #{{ order.business_source.id }}</h4>
+                <p style="margin: 0 0 5px 0;"><strong>العدد المتعاقد عليه:</strong> {{ order.business_source.total_quantity }} رأس</p>
+                <p style="margin: 0;"><strong>ملاحظات العقد:</strong> {{ order.business_source.admin_notes|default:"لا توجد ملاحظات" }}</p>
+            </div>
+
+            {% if order.items.all %}
+            <table style="margin-top: 15px;">
+                <thead>
+                    <tr>
+                        <th>كود الماشية المخصصة</th>
+                        <th>الفئة</th>
+                        <th>الوزن الفعلي</th>
+                        <th>السعر النهائي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td><strong>{{ item.animal.code }}</strong></td>
+                        <td>{{ item.animal.category.name_ar }}</td>
+                        <td>
+                            {% if item.actual_weight %}
+                                <strong>{{ item.actual_weight }} كجم</strong>
+                            {% else %}
+                                {{ item.animal.current_weight|default:"غير مسجل" }} كجم <br><small>(تقديري)</small>
+                            {% endif %}
+                        </td>
+                        <td style="color: #198754; font-weight: bold;">
+                            {{ item.price_per_item }} ج.م
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="text-align: center; padding: 20px; background: #fff3cd; border-radius: 8px;">لم يتم تخصيص الحيوانات من المخزن لهذا الطلب بعد.</p>
+            {% endif %}
+        {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>الصنف</th>
+                        <th>الخدمات الإضافية</th>
+                        <th>الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td>
+                            {{ item.animal.category.name_ar }} (كود: {{ item.animal.code }})
+                            {% if item.share_quantity > 1 %} - {{ item.share_quantity }} أسهم {% endif %}
+                            {% if item.actual_weight %}
+                                <br><small style="color: blue; font-weight: bold;">الوزن الفعلي المسلم: {{ item.actual_weight }} كجم</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.selected_services.slaughter %}ذبح، {% endif %}
+                            {% if item.selected_services.cutting %}تقطيع، {% endif %}
+                            {% if item.selected_services.packaging %}تغليف{% endif %}
+                            {% if item.selected_services.butcher_notes %}
+                                <br><small>تعليمات: {{ item.selected_services.butcher_notes }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.original_price and item.original_price != item.price_per_item %}
+                                <span style="text-decoration: line-through; color: #999; font-size: 12px;">{{ item.original_price }}</span><br>
+                            {% endif %}
+                            {{ item.price_per_item|add:item.service_cost }} ج.م
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% if completed_payments %}
+        <h3>سجل الدفعات</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>تاريخ الدفعة</th>
+                    <th>طريقة الدفع</th>
+                    <th>المبلغ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in completed_payments %}
+                <tr>
+                    <td dir="ltr">{{ payment.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ payment.get_payment_method_display|default:payment.payment_method }}</td>
+                    <td style="color: green;">{{ payment.amount }} ج.م</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <div class="totals-box">
+            <table>
+                <tr>
+                    <td><strong>الإجمالي:</strong></td>
+                    <td>{{ order.total_price }} ج.م</td>
+                </tr>
+                <tr>
+                    <td style="color: green;"><strong>المدفوع مسبقاً:</strong></td>
+                    <td style="color: green;">{{ order.deposit_total }} ج.م</td>
+                </tr>
+                <tr class="final-due">
+                    <td><strong>المطلوب دفعه الآن:</strong></td>
+                    <td><strong>{{ order.remaining_amount }} ج.م</strong></td>
+                </tr>
+            </table>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="footer-note">
+            شكراً لتسوقكم مع لحم – لحوم طازجة وجودة عالية
+        </div>
+    </div>
+</body>
+</html>

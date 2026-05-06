@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عقد عمل واتفاقية سرية - شركة لَحِم</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            line-height: 1.9;
+            padding: 40px 50px;
+            color: #1e1e1e;
+            background: #fff;
+        }
+        .print-btn {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            background: #0d6efd;
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            cursor: pointer;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 999;
+            transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .print-btn:hover {
+            background: #0b5ed7;
+            transform: scale(1.02);
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+                margin: 1cm;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            .clause, .signatures, table, .info-section {
+                page-break-inside: avoid;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #1e3a2f;
+            padding-bottom: 18px;
+            margin-bottom: 30px;
+        }
+        .company-info h2 {
+            margin: 0 0 6px 0;
+            color: #1e3a2f;
+            font-size: 26px;
+            font-weight: 700;
+        }
+        .company-info p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3a5e4c;
+        }
+        .logo {
+            height: 85px;
+            width: auto;
+            filter: grayscale(0.8);
+            object-fit: contain;
+        }
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+            text-underline-offset: 12px;
+            margin: 35px 0 25px;
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e3a2f;
+            letter-spacing: 0.5px;
+        }
+        .contract-date {
+            font-size: 17px;
+            margin: 20px 0 15px;
+            font-weight: 600;
+        }
+        .party {
+            margin: 18px 0;
+            font-size: 17px;
+        }
+        .party strong {
+            color: #1e3a2f;
+            font-size: 18px;
+        }
+        .clause {
+            margin-bottom: 18px;
+            text-align: justify;
+            font-size: 16.5px;
+        }
+        .clause-title {
+            font-weight: 800;
+            text-decoration: underline;
+            margin-left: 6px;
+            color: #1e3a2f;
+            display: inline-block;
+        }
+        .clause-content {
+            display: inline;
+        }
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            page-break-inside: avoid;
+        }
+        .sign-box {
+            text-align: center;
+            width: 42%;
+        }
+        .sign-line {
+            border-bottom: 2px solid #1e1e1e;
+            margin-top: 45px;
+            width: 100%;
+        }
+        .sign-box p {
+            margin-top: 8px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .placeholder-highlight {
+            background-color: #f8f9fa;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            direction: ltr;
+            display: inline-block;
+        }
+        .footer-note {
+            margin-top: 35px;
+            font-style: italic;
+            border-top: 1px dashed #aaa;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+        .text-muted {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ طباعة العقد</button>
+
+    <div class="header">
+        <div class="company-info">
+            <h2>شركة لَحِم لإدارة المزارع واللحوم</h2>
+            <p>إدارة الموارد البشرية - عقود التوظيف</p>
+        </div>
+        <img src="https://lahmfarm.com/logo.png" alt="Lahm Logo" class="logo-img" style="max-height: 80px; object-fit: contain;">
+    </div>
+
+    <h1>عقد عمل موظف واتفاقية الحفاظ على السرية والعهدة</h1>
+
+    <div class="contract-date">
+        📅 إنه في يوم: <strong>{{ date|date:"Y-m-d" }}</strong> الموافق ________ هجرية
+    </div>
+
+    <div class="party">
+    </div>
+    <div class="party">
+        <strong>الطرف الثاني:</strong> السيد/ة <strong>{{ employee.full_name|default:"______________________________________" }}</strong>
+        ، ويحمل بطاقة رقم قومي / إقامة رقم: <strong dir="ltr">{{ employee.national_id|default:"________________________" }}</strong>
+        ، الجنسية: ______________ ، والمُعين بوظيفة: <strong>{{ employee.role.name|default:"________________________" }}</strong>
+        (ويشار إليه فيما يلي بـ "الموظف").
+    </div>
+
+    <h3 style="margin: 30px 0 15px; color: #1e3a2f;">📌 بنود العقد</h3>
+
+    <div class="clause">
+        <span class="clause-title">البند الأول (نطاق العمل والالتزام):</span>
+        <span class="clause-content">يوافق الطرف الثاني على العمل لدى الطرف الأول في الوظيفة المذكورة أعلاه، ويلتزم بأداء المهام الموكلة إليه بكل أمانة وإخلاص، والالتزام بمواعيد الحضور والانصراف المقررة، والتقيد بلوائح وأنظمة العمل الداخلية وسياسات الشركة. أي مخالفة للدوام تستوجب الخصم وفق اللائحة.</span>
+    </div>
+
+    <div class="clause">
+        <span class="clause-title">البند الثاني (السرية التامة وحظر المنافسة):</span>
+        <span class="clause-content">يُقر الطرف الثاني بأنه سيحافظ على السرية التامة لكافة أسرار الشركة الفنية والتجارية والإدارية، بما في ذلك على سبيل المثال لا الحصر: قوائم العملاء، أرقام هواتفهم، عناوينهم، الموردين، سياسات التسعير، خطط التوسع، والبيانات المالية. يُعد إفشاء أي من هذه المعلومات لأي جهة خارجية أو منافسة خيانة أمانة صريحة تستوجب المساءلة الجنائية والمدنية، والتعويض الكامل عن الأضرار، والفصل الفوري دون إنذار أو تعويض.</span>
+    </div>
+
+    <div class="clause">
+        <span class="clause-title">البند الثالث (العهدة والمسؤولية المالية):</span>
+        <span class="clause-content">يقر الطرف الثاني أن جميع العُهد التي تُسلم إليه (نقدية، أجهزة دفع POS، سيارات، مفاتيح، بضائع، معدات، أو مستندات) هي أمانة في ذمته، ويتحمل مسؤوليتها كاملة. ويحق للشركة الرجوع عليه جنائياً ومدنياً في حالات الفقد أو التلف الناتج عن الإهمال أو العجز المتعمد، وللشركة خصم قيمة العجز من مستحقاته فوراً ودون حاجة لإنذار قضائي.</span>
+    </div>
+
+    <div class="clause">
+        <span class="clause-title">البند الرابع (فترة الاختبار):</span>
+        <span class="clause-content">يخضع الطرف الثاني لفترة اختبار مدتها (ثلاثة أشهر) تبدأ من تاريخ مباشرة العمل. ويحق للطرف الأول خلال هذه الفترة إنهاء العقد دون إنذار أو تعويض إذا ثبت عدم كفاءة الموظف أو عدم التزامه بتعليمات العمل.</span>
+    </div>
+
+    <div class="clause">
+        <span class="clause-title">البند الخامس (اللوائح والجزاءات):</span>
+        <span class="clause-content">يقر الطرف الثاني بأنه اطلع على لائحة الجزاءات التأديبية المعمول بها في الشركة ويوافق عليها، وتشمل على سبيل المثال جزاءات التأخير، الغياب بدون إذن، الإهمال، أو التجاوز بحق العملاء والزملاء، ويحق للإدارة توقيع الجزاء المناسب بما في ذلك الفصل في الحالات الجسيمة.</span>
+    </div>
+
+    <div class="clause">
+        <span class="clause-title">البند السادس (إنهاء العلاقة التعاقدية):</span>
+        <span class="clause-content">يُنهى هذا العقد باتفاق الطرفين، أو بانتهاء مدته المحددة، أو لأحد الأسباب المشروعة وفق نظام العمل. وفي جميع الأحوال، يلتزم الموظف بتسليم كافة العهد والأصول التي بحوزته قبل استلام مستحقاته النهائية.</span>
+    </div>
+
+    <p style="margin-top: 40px; font-weight: 600;">✅ تم تحرير هذا العقد من نسختين، بيد كل طرف نسخة للعمل بموجبها بعد قراءته وفهم محتواه والقبول بكامل بنوده بطيب خاطر.</p>
+
+    <div class="signatures">
+        <div class="sign-box">
+            <p><strong>الطرف الأول (الشركة)</strong><br>المفوض بالتوقيع</p>
+            <div class="sign-line"></div>
+            <p>الاسم: __________________<br>التوقيع / الختم الرسمي</p>
+        </div>
+        <div class="sign-box">
+            <p><strong>الطرف الثاني (الموظف)</strong></p>
+            <div class="sign-line"></div>
+            <p>الاسم: {{ employee.full_name|default:"__________________" }}<br>التوقيع / البصمة</p>
+            <p style="font-size: 13px; margin-top: 10px;">رقم الهوية: {{ employee.national_id|default:"________" }}</p>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        <span class="text-muted">نسخة معتمدة من عقد العمل – شركة لَحِم لإدارة المزارع واللحوم</span>
+    </div>
+</body>
+</html>

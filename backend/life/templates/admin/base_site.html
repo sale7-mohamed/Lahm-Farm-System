@@ -1,0 +1,22 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{# عنوان المتصفح #}
+{% block title %}لوحة الإدارة{% endblock %}
+
+{# اسم الموقع أعلى اليسار #}
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">لوحة الإدارة</a>
+</h1>
+{% endblock %}
+
+{# الرسالة اللي فوق "Welcome" بنستبدلها بالاسم الكامل #}
+{% block welcome-msg %}
+مرحباً، <strong>{{ request.user.full_name|default:request.user.get_username }}</strong>
+{% endblock %}
+
+{# لو مش عايز شريط روابط فوق ممكن تسيبه فاضي #}
+{% block nav-global %}{% endblock %}
+
+

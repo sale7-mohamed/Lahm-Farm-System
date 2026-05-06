@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إذن تسليم #{{ order.id }}</title>
+    <style>
+        body {
+            font-family: 'Cairo', 'Arial', sans-serif;
+            direction: rtl;
+            padding: 0;
+            background: #eef2f3;
+            margin: 0;
+            color: #333;
+        }
+        .delivery-note-box {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #0d6efd;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .print-btn:hover {
+            background: #0b5ed7;
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+                margin: 1cm;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: white !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            .clause, .signatures, table, .info-section {
+                page-break-inside: avoid;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo-img {
+            height: 70px;
+            object-fit: contain;
+        }
+        .header-details {
+            text-align: left;
+        }
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: right;
+        }
+        th {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: bold;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .sign-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding: 0 50px;
+        }
+        .footer-note {
+            clear: both;
+            margin-top: 50px;
+            text-align: center;
+            color: #777;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">طباعة إذن التسليم 🖨️</button>
+    <div class="delivery-note-box">
+        <div class="header">
+            <div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <img src="https://lahmfarm.com/logo.png" alt="Lahm Logo" class="logo-img" style="max-height: 80px; object-fit: contain;">
+                    <div>
+                        <h1 style="color: #0d6efd; margin: 0;">لَحِم (Lahm)</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="header-details">
+                <h2 style="margin:0; color:#333;">إذن تسليم بضاعة</h2>
+                {% if order.source == 'b2b' and order.business_source %}
+                    <p>رقم طلب الشركات: <strong>#{{ order.business_source.id }}</strong></p>
+                {% else %}
+                    <p>رقم الطلب: #{{ order.id }}</p>
+                {% endif %}
+                <p>تاريخ: {{ order.created_at|date:"Y-m-d" }}</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div>
+                <strong>بيانات العميل:</strong><br>
+                {{ order.user.full_name|default:order.user.username }}<br>
+                هاتف: <span dir="ltr">{{ order.user.phone|default:"—" }}</span>
+            </div>
+            <div>
+                <strong>طريقة الاستلام:</strong><br>
+                {% if order.delivery_type == 'pickup' %}
+                    من المزرعة
+                {% else %}
+                    توصيل للمنزل<br>
+                    {{ order.delivery_address.governorate|default:"" }}
+                    {{ order.delivery_address.city|default:"" }}
+                    {{ order.delivery_address.street|default:"" }}
+                {% endif %}
+            </div>
+        </div>
+
+        <h3>الأصناف المسلمة</h3>
+        {% if order.source == 'b2b' and order.business_source %}
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 20px;">
+                <strong>طلب توريد أعمال رقم:</strong> #{{ order.business_source.id }}<br>
+                <strong>إجمالي الرؤوس المطلوبة:</strong> {{ order.business_source.total_quantity }} رأس
+            </div>
+
+            {% if order.items.all %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>كود الماشية</th>
+                        <th>الفئة</th>
+                        <th>الوزن المسجل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td><strong>{{ item.animal.code }}</strong></td>
+                        <td>{{ item.animal.category.name_ar }}</td>
+                        <td>
+                            {{ item.animal.current_weight|default:"غير مسجل" }} كجم
+                            {% if item.actual_weight %}
+                                <br><small style="color: blue; font-weight: bold;">(وزن فعلي: {{ item.actual_weight }} كجم)</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="text-align: center; padding: 20px; background: #f8f9fa;">لا توجد مواشي مخصصة بعد للإستلام.</p>
+            {% endif %}
+        {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>كود الماشية</th>
+                        <th>النوع</th>
+                        <th>الكمية/الأسهم</th>
+                        <th>حالة التجهيز</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.animal.code }}</td>
+                        <td>{{ item.animal.category.name_ar }}</td>
+                        <td>{{ item.share_quantity|default:1 }}</td>
+                        <td>
+                            {% if item.selected_services.slaughter %}
+                                مذبوح (لحوم)
+                            {% else %}
+                                حي
+                            {% endif %}
+                            {% if item.actual_weight %}
+                                <br><small style="color: blue; font-weight: bold;">(وزن فعلي: {{ item.actual_weight }} كجم)</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <p style="margin-top: 30px;">أقر أنا الموقع أدناه باستلام الماشية/اللحوم الموضحة أعلاه بحالة جيدة ومطابقة للمواصفات.</p>
+
+        <div class="sign-area">
+            <div style="text-align: center;">
+                <p><strong>توقيع العميل المستلم</strong></p>
+                <div style="border-bottom: 1px solid #000; width: 200px; height: 30px;"></div>
+            </div>
+            <div style="text-align: center;">
+                <p><strong>توقيع المندوب / أمين المخزن</strong></p>
+                <div style="border-bottom: 1px solid #000; width: 200px; height: 30px;"></div>
+            </div>
+        </div>
+        <div class="footer-note">
+            هذا الإذن يثبت استلام البضاعة بحالة سليمة – مع حفظ حقوق الطرفين
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+
+    <!-- KILL SERVICE WORKERS & CACHE -->
+    <script>
+        window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('Failed to fetch dynamically imported module')) {
+                window.location.reload(true);
+            }
+        });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      connect-src 'self' http://127.0.0.1:8000 ws://127.0.0.1:8000 http://localhost:8000 ws://localhost:8000 https://lahmfarm.com wss://lahmfarm.com https://*.lahmfarm.com wss://*.lahmfarm.com;
+      img-src 'self' http://127.0.0.1:8000 https://lahmfarm.com https://*.lahmfarm.com data: blob: https://www.transparenttextures.com https://cdn.jsdelivr.net;
+      media-src 'self' http://127.0.0.1:8000 https://lahmfarm.com https://*.lahmfarm.com data: blob:;
+    ">
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة الإدارة - لَحِم</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Arial', Tahoma, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; }
+        .email-container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .header { background: #198754; padding: 30px 20px; text-align: center; color: white; }
+        .header img { max-height: 60px; margin-bottom: 10px; }
+        .content { padding: 30px; color: #333; line-height: 1.8; font-size: 16px; text-align: right; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #777; border-top: 1px solid #eee; }
+        .btn { display: inline-block; padding: 12px 24px; background: #198754; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body style="direction: rtl; text-align: right; font-family: Arial, sans-serif; background-color: #f4f6f9;">
+    <!-- أضفنا ستايل مباشر هنا لضمان عمله في كل تطبيقات الإيميل -->
+    <div class="email-container" dir="rtl" style="direction: rtl; text-align: right; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px;">
+        <div class="header" style="background: #198754; padding: 30px 20px; text-align: center; color: white;">
+            <img src="https://lahmfarm.com/logo.png" alt="Lahm Farm Logo" style="filter: brightness(0) invert(1); max-height: 60px;">
+            <h2 style="margin: 0;">متجر لَحِم (Lahm)</h2>
+        </div>
+        <div class="content" style="padding: 30px; color: #333; line-height: 1.8; font-size: 16px; text-align: right; direction: rtl;">
+            {% block content %}{% endblock %}
+        </div>
+        <div class="footer" style="background: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #777;">
+            <p>شكراً لثقتكم في لَحِم - أجود أنواع اللحوم والمواشي</p>
+            <p dir="ltr" style="direction: ltr;">© 2026 Lahm Farm. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+
