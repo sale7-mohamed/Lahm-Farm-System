@@ -2,6 +2,8 @@
 
 A full-stack, enterprise-level web application designed to digitize the entire lifecycle of a modern livestock farm. This system bridges the gap between B2C online shopping, B2B corporate supplies, and complex internal logistics, offering a massive ERP dashboard to manage operations, accounting, and human resources in real-time.
 
+ **Developed by:** [Saleh Mohamed](https://www.linkedin.com/in/sale7-mohamed/)
+
 ---
 
 ##  Key Features
@@ -20,44 +22,28 @@ A full-stack, enterprise-level web application designed to digitize the entire l
 * **Logistics & Fleet Management:** Live GPS tracking for delivery vehicles and OTP-based secure delivery handoffs.
 * **Real-Time Communication:** Internal Live Chat built with WebSockets, featuring strict Role-Based Access Control (RBAC).
 * **Accounting & HR:** Complete double-entry journal system, daily attendance tracking, payroll management, and comprehensive P&L (Profit & Loss) reports.
-* **Messaging Manager:** Broadcast SMS, Push Notifications, and Emails directly to targeted customer segments.
 
 ---
 
 ##  Tech Stack
 
-### Backend
-* **Python / Django / Django Rest Framework (DRF)**
-* **PostgreSQL** (Primary Database)
-* **Redis & Celery** (Caching & Asynchronous Tasks)
-* **Django Channels** (WebSockets for real-time Chat & Live Tracking)
-
-### Frontend
-* **React.js & Vite**
-* **Tailwind CSS & React-Bootstrap** (Responsive UI/UX)
-* **Recharts** (Data Visualization)
-
-### DevOps & Integrations
-* **Infrastructure:** Docker, Docker Compose, Nginx
-* **Payments:** Paymob API
-* **Communications:** SMS Gateways (WhySMS, ArpuPlus), WebPush Notifications
+* **Backend:** Python, Django, Django Rest Framework (DRF), PostgreSQL, Redis, Celery.
+* **Frontend:** React.js, Vite, Tailwind CSS, React-Bootstrap, Recharts.
+* **Real-Time:** Django Channels (WebSockets) for Chat & Live Tracking.
+* **Integrations:** Docker, Nginx, Paymob API, SMS Gateways (WhySMS, ArpuPlus), WebPush.
 
 ---
 
-##  System Demo & Previews
+##  System Previews
 
- **[Click here to watch the full system demo video]** *(Replace this text with your YouTube Unlisted Link)*
+**1. Storefront & B2C Experience:**
 
-### Screenshots
-*(Add your screenshots below in GitHub by dragging and dropping the images here)*
+<img width="1919" height="1079" alt="done1" src="https://github.com/user-attachments/assets/fa534c98-451c-40c8-811f-bcb273f0a434" />
 
-1. **Storefront & B2C Experience:**
-[Drop image here]
+**2. ERP Dashboard & Financial Analytics:**
 
-2. **ERP Dashboard & Financial Analytics:**
-[Drop image here]
+<img width="1919" height="1079" alt="done2" src="https://github.com/user-attachments/assets/eb5009c2-66bd-42ea-8c0f-2f4c71b6b640" />
 
-3. **Smart Dispatcher & Driver Tracking:**[Drop image here]
+**3. Real-Time Chat & Operations:**
 
----
-*Developed by [Your Name]*
+<img width="1919" height="1079" alt="done3" src="https://github.com/user-attachments/assets/055aa4bd-0fdf-40c5-8d45-170f8df26984" />
